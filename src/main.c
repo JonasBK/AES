@@ -10,27 +10,40 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "sbox.h"
+#include "../include/sbox.h"
+#include "../include/mixcolumns.h"
+
+void printState(unsigned char state[16]) {
+	printf("0x");
+	    for(int i = 0; i < 16; i++)
+	        printf("%02x", state[i]);
+	printf("\n");
+}
+
+void printHexChar(char ch) {
+	printf("%x", ch & 0xff);
+}
 
 int main(void) {
-	const char plaintext[] = "6bc1bee22e409f96e93d7e117393172a", *pos = plaintext; //0x7f78ae983109db901e27f3828fdcf0e5
-	unsigned char *newState;
-	unsigned char state[16];
+	const char plaintext[] = "6bc1bee22e409f96e93d7e117393172a", *pos = plaintext;
+	unsigned char state[16], *newState;
 
-	for (int count = 0; count < sizeof state/sizeof *state; count++) {
-		sscanf(pos, "%2hhx", &state[count]);
+	// Plaintext to state array {x1, x2, x3, ...}
+	for (int i = 0; i < sizeof state/sizeof *state; i++) {
+		sscanf(pos, "%2hhx", &state[i]);
 		pos += 2;
 	}
+	printState(state);
 
 	newState = sBox(state);
+	printState(newState);
 
-	printf("0x");
-	    for(int count = 0; count < 16; count++)
-	        printf("%02x", newState[count]);
-	printf("\n");
+	newState = mixColumns(newState);
+	printState(newState);
 
 	return 0;
 }
 
-
-
+//0x6bc1bee22e409f96e93d7e117393172a
+//0x7f78ae983109db901e27f3828fdcf0e5
+//0x3c1032e7b0dffddbf8408323ab053a70

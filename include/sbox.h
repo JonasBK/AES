@@ -10,4 +10,4 @@
 
 unsigned char* sBox(unsigned char[16]);
 
-#endif /* SBOX_H_ */
+#endif /* sbox_h_ */
