@@ -41,6 +41,9 @@ int main(void) {
 	newState = mixColumns(newState);
 	printState(newState);
 
+	newState = invMixColumns(newState);
+	printState(newState);
+
 	return 0;
 }
 

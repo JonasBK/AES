@@ -10,4 +10,6 @@
 
 unsigned char* mixColumns(unsigned char[16]);
 
+unsigned char* invMixColumns(unsigned char[16]);
+
 #endif /* mixcolumns_h_ */
