@@ -14,7 +14,8 @@
 #include "../include/subbytes.h"
 #include "../include/timing.h"
 
-void printState(unsigned char state[16]) {
+void printState(unsigned char state[16], char mes[]) {
+	printf("%s: \t\t", mes);
 	printf("0x");
 	    for(int i = 0; i < 16; i++)
 	        printf("%02x", state[i]);
@@ -36,16 +37,16 @@ int main(void) {
 		sscanf(pos, "%2hhx", &state[i]);
 		pos += 2;
 	}
-	printState(state);
+	printState(state, "Original state");
 
 	newState = subBytes(state);
-	printState(newState);
+	printState(newState, "After SubBytes");
 
 	newState = mixColumns(newState);
-	printState(newState);
+	printState(newState, "After MixColumns");
 
 	newState = invMixColumns(newState);
-	printState(newState);
+	printState(newState, "After InvMixColumns");
 
 	stopTimer();
 
