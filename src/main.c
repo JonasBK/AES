@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "../include/keyschedule.h"
 #include "../include/addroundkey.h"
 #include "../include/mixcolumns.h"
 #include "../include/subbytes.h"
@@ -30,7 +31,7 @@ void printHexChar(char ch) {
 
 int main(void) {
 	const char plaintext[] = "6bc1bee22e409f96e93d7e117393172a", keyString[] = "2b7e151628aed2a6abf7158809cf4f3c", *pos1 = plaintext, *pos2 = keyString;
-	unsigned char state[16], key[16], *newState;
+	unsigned char state[16], key[16], *newState, *newKey;
 
 	startTimer();
 
@@ -43,6 +44,14 @@ int main(void) {
 	for (int i = 0; i < sizeof key/sizeof *key; i++) {
 		sscanf(pos2, "%2hhx", &key[i]);
 		pos2 += 2;
+	}
+
+	//Key encryption
+	newKey = keySchedule(key, 0);
+	printState(newKey, "First key");
+	for (int i = 1; i < 10; i++) {
+		newKey = keySchedule(newKey, i);
+		printState(newKey, "Next key");
 	}
 
 	printState(state, "Original state");
