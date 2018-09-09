@@ -10,8 +10,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/sbox.h"
 #include "../include/mixcolumns.h"
+#include "../include/subbytes.h"
 #include "../include/timing.h"
 
 void printState(unsigned char state[16]) {
@@ -38,7 +38,7 @@ int main(void) {
 	}
 	printState(state);
 
-	newState = sBox(state);
+	newState = subBytes(state);
 	printState(newState);
 
 	newState = mixColumns(newState);
