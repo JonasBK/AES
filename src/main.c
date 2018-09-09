@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include "../include/mixcolumns.h"
 #include "../include/subbytes.h"
+#include "../include/shiftrows.h"
 #include "../include/timing.h"
 
 void printState(unsigned char state[16], char mes[]) {
@@ -41,6 +42,9 @@ int main(void) {
 
 	newState = subBytes(state);
 	printState(newState, "After SubBytes");
+
+	newState = shiftRows(newState);
+	printState(newState, "After ShiftRows");
 
 	newState = mixColumns(newState);
 	printState(newState, "After MixColumns");
