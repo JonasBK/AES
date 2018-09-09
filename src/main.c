@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include "../include/sbox.h"
 #include "../include/mixcolumns.h"
+#include "../include/timing.h"
 
 void printState(unsigned char state[16]) {
 	printf("0x");
@@ -28,6 +29,8 @@ int main(void) {
 	const char plaintext[] = "6bc1bee22e409f96e93d7e117393172a", *pos = plaintext;
 	unsigned char state[16], *newState;
 
+	startTimer();
+
 	// Plaintext to state array {x1, x2, x3, ...}
 	for (int i = 0; i < sizeof state/sizeof *state; i++) {
 		sscanf(pos, "%2hhx", &state[i]);
@@ -43,6 +46,8 @@ int main(void) {
 
 	newState = invMixColumns(newState);
 	printState(newState);
+
+	stopTimer();
 
 	return 0;
 }
