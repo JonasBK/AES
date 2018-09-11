@@ -19,7 +19,7 @@ void printHexChar(char ch) {
 
 int main(void) {
 	const char plaintext[] = "54776F204F6E65204E696E652054776F", key[] = "5468617473206D79204B756E67204675";
-	char *chipertext;
+	char *chipertext, *plaintext2;
 
 	printf("Key: \t\t%s\n", key);
 	printf("Plaintext: \t%s\n", plaintext);
@@ -27,8 +27,14 @@ int main(void) {
 	startTimer();
 	chipertext = AES128Encrypt(plaintext, key);
 	stopTimer();
-
 	printf("Chipertext: \t%s\n", chipertext);
+
+
+	startTimer();
+	plaintext2 = AES128Decrypt(chipertext, key);
+	stopTimer();
+	printf("Plaintext: \t%s\n", plaintext2);
+
 	return 0;
 }
 

@@ -41,6 +41,7 @@ char* AES128Encrypt(const char plaintext[16], const char keyString[16]) {
 		}
 	}
 
+//	printState(state, "state");
 	newState = addRoundKey(state, key);
 //	printState(newState, "newState");
 	newKey = keySchedule(key, 0);
@@ -76,3 +77,63 @@ char* AES128Encrypt(const char plaintext[16], const char keyString[16]) {
 	return res;
 }
 
+char* AES128Decrypt(const char chipertext[16], const char keyString[16]) {
+	static char res[32];
+	int k = 0;
+	const char *pos1 = chipertext, *pos2 = keyString;
+	unsigned char state[16], tempState[16], tempKey[16], keys[11][16], *newState, *newKey;
+
+	// Plaintext to state array and key similar
+	for (int i = 0; i < sizeof state/sizeof *state; i++) {
+		sscanf(pos1, "%2hhx", &tempState[i]);
+		sscanf(pos2, "%2hhx", &tempKey[i]);
+		pos1 += 2;
+		pos2 += 2;
+	}
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			keys[0][4 * i + j] = tempKey[4 * j + i];
+			state[4 * i + j] = tempState[4 * j + i];
+		}
+	}
+
+	for (int i = 0; i < 10; i++) {
+		newKey = keySchedule(keys[i], i);
+		for (int j = 0; j < 16; j++) {
+			keys[i + 1][j] = newKey[j];
+		}
+	}
+
+//	printState(keys[10], "key");
+	newState = addRoundKey(state, keys[10]);
+//	printState(state, "First");
+	newState = invShiftRows(newState);
+//	printState(newState, "After InvShiftRows");
+	newState = invSubBytes(newState);
+//	printState(newState, "After InvSubBytes");
+
+	for (int i = 9; i > 0; i--) {
+//		printState(keys[i], "key");
+		newState = addRoundKey(newState, keys[i]);
+//		printState(newState, "After AddRoundKey");
+		newState = invMixColumns(newState);
+//		printState(newState, "After InvMixColumns");
+		newState = invShiftRows(newState);
+//		printState(newState, "After InvShiftRows");
+		newState = invSubBytes(newState);
+//		printState(newState, "After InvSubBytes");
+//		printf("\n");
+	}
+
+//	printState(newState, "Almost last");
+	newState = addRoundKey(newState, keys[0]);
+//	printState(newState, "Last");
+
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			sprintf(&res[k], "%02x", newState[4 * j + i]);
+			k += 2;
+		}
+	}
+	return res;
+}

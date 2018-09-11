@@ -53,6 +53,14 @@ unsigned char* subBytes(unsigned char currentState[16]) {
    return newState;
 }
 
+unsigned char* invSubBytes(unsigned char currentState[16]) {
+   static unsigned char newState[16];
+   for (int i = 0; i < 16; i++) {
+	   newState[i] = SI[currentState[i]];
+   }
+   return newState;
+}
+
 unsigned char sBox(unsigned char ch) {
 	return S[ch];
 }

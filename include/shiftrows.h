@@ -10,4 +10,6 @@
 
 unsigned char* shiftRows(unsigned char[16]);
 
+unsigned char* invShiftRows(unsigned char[16]);
+
 #endif /* shiftrows_h_ */
