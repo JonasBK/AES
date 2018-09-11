@@ -29,7 +29,7 @@ unsigned char* keySchedule(unsigned char currentKey[16], int round) {
 
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
-			currentSubKeys[i][j] = currentKey[4 * i + j];
+			currentSubKeys[i][j] = currentKey[4 * j + i];
 		}
 	}
 	funnyWord = getFunnyWord(currentSubKeys[3], roundConst[round]);
@@ -37,9 +37,9 @@ unsigned char* keySchedule(unsigned char currentKey[16], int round) {
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
 			if (i == 0) {
-				newKey[4 * i + j] = currentSubKeys[i][j] ^ funnyWord[j];
+				newKey[4 * j + i] = currentSubKeys[i][j] ^ funnyWord[j];
 			} else {
-				newKey[4 * i + j] = currentSubKeys[i][j] ^ newKey[4 * (i - 1) + j];
+				newKey[4 * j + i] = currentSubKeys[i][j] ^ newKey[4 * j + (i - 1)];
 			}
 		}
 	}

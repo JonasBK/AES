@@ -31,19 +31,22 @@ void printHexChar(char ch) {
 
 int main(void) {
 	const char plaintext[] = "6bc1bee22e409f96e93d7e117393172a", keyString[] = "2b7e151628aed2a6abf7158809cf4f3c", *pos1 = plaintext, *pos2 = keyString;
-	unsigned char state[16], key[16], *newState, *newKey;
+	unsigned char state[16], key[16], tempState[16], tempKey[16], *newState, *newKey;
 
 	startTimer();
 
-	// Plaintext to state array {x1, x2, x3, ...}
+	// Plaintext to state array and key similar
 	for (int i = 0; i < sizeof state/sizeof *state; i++) {
-		sscanf(pos1, "%2hhx", &state[i]);
+		sscanf(pos1, "%2hhx", &tempState[i]);
+		sscanf(pos2, "%2hhx", &tempKey[i]);
 		pos1 += 2;
-	}
-	// Key string to key array
-	for (int i = 0; i < sizeof key/sizeof *key; i++) {
-		sscanf(pos2, "%2hhx", &key[i]);
 		pos2 += 2;
+	}
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			key[4 * i + j] = tempKey[4 * j + i];
+			state[4 * i + j] = tempState[4 * j + i];
+		}
 	}
 
 	//Key encryption
