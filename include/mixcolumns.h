@@ -8,6 +8,8 @@
 #ifndef mixcolumns_h_
 #define mixcolumns_h_
 
+char gMul(char, char);
+
 unsigned char* mixColumns(unsigned char[16]);
 
 unsigned char* invMixColumns(unsigned char[16]);

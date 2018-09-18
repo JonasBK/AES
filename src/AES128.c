@@ -12,6 +12,7 @@
 #include "../include/mixcolumns.h"
 #include "../include/subbytes.h"
 #include "../include/shiftrows.h"
+#include "../include/ttable.h"
 
 void printState(unsigned char state[16], char mes[]) {
 	printf("%s: \t\t", mes);
@@ -21,11 +22,70 @@ void printState(unsigned char state[16], char mes[]) {
 	printf("\n");
 }
 
+unsigned char* standardEncrypt(unsigned char state[16], unsigned char key[16]) {
+	unsigned char *newKey, *newState;
+
+	newState = addRoundKey(state, key);
+	newKey = keySchedule(key, 0);
+
+	for (int i = 1; i < 10; i++) {
+		newState = subBytes(newState);
+//		printState(state, "After SubBytes");
+		newState = shiftRows(newState);
+//		printState(state, "After ShiftRows");
+		newState = mixColumns(newState);
+//		printState(newState, "After MixColumns");
+//		printState(newKey, "key");
+		newState = addRoundKey(newState, newKey);
+//		printState(state, "After AddRoundKey");
+		newKey = keySchedule(newKey, i);
+//		printf("\n");
+	}
+
+	newState = subBytes(newState);
+//	printState(newState, "After SubBytes");
+	newState = shiftRows(newState);
+//	printState(newState, "After ShiftRows");
+//	printState(newKey, "key");
+	newState = addRoundKey(newState, newKey);
+//	printState(newState, "Final");
+
+	return newState;
+}
+
+unsigned char* tTableEncrypt(unsigned char state[16], unsigned char key[16]) {
+	unsigned char *newKey, *newState;
+
+	newState = addRoundKey(state, key);
+	newKey = keySchedule(key, 0);
+
+	for (int i = 1; i < 10; i++) {
+//		printState(newState, "Before remixTTable");
+		newState = subShiftMixTTable(newState);
+//		printState(newState, "After remixTTable");
+//		printState(newKey, "key");
+		newState = addRoundKey(newState, newKey);
+//		printState(newState, "After AddRoundKey");
+		newKey = keySchedule(newKey, i);
+//		printf("\n");
+	}
+
+	newState = subBytes(newState);
+//	printState(newState, "After SubBytes");
+	newState = shiftRows(newState);
+//	printState(newState, "After ShiftRows");
+//	printState(newKey, "key");
+	newState = addRoundKey(newState, newKey);
+//	printState(newState, "Final");
+
+	return newState;
+}
+
 char* AES128Encrypt(const char plaintext[16], const char keyString[16]) {
 	static char res[32];
 	int k = 0;
 	const char *pos1 = plaintext, *pos2 = keyString;
-	unsigned char state[16], key[16], tempState[16], tempKey[16], *newState, *newKey;
+	unsigned char state[16], key[16], tempState[16], tempKey[16], *newState;
 
 	// Plaintext to state array and key similar
 	for (int i = 0; i < sizeof state/sizeof *state; i++) {
@@ -41,32 +101,8 @@ char* AES128Encrypt(const char plaintext[16], const char keyString[16]) {
 		}
 	}
 
-//	printState(state, "state");
-	newState = addRoundKey(state, key);
-//	printState(newState, "newState");
-	newKey = keySchedule(key, 0);
-
-	for (int i = 1; i < 10; i++) {
-		newState = subBytes(newState);
-//		printState(newState, "After SubBytes");
-		newState = shiftRows(newState);
-//		printState(newState, "After ShiftRows");
-		newState = mixColumns(newState);
-//		printState(newState, "After MixColumns");
-//		printState(newKey, "key");
-		newState = addRoundKey(newState, newKey);
-//		printState(newState, "After AddRoundKey");
-		newKey = keySchedule(newKey, i);
-//		printf("\n");
-	}
-
-	newState = subBytes(newState);
-//	printState(newState, "After SubBytes");
-	newState = shiftRows(newState);
-//	printState(newState, "After ShiftRows");
-//	printState(newKey, "key");
-	newState = addRoundKey(newState, newKey);
-//	printState(newState, "Final");
+	newState = tTableEncrypt(state, key);
+//	newState = standardEncrypt(state, key);
 
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {

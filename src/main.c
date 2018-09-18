@@ -12,6 +12,11 @@
 #include <stdlib.h>
 #include "../include/timing.h"
 #include "../include/AES128.h"
+#include "../include/addroundkey.h"
+#include "../include/mixcolumns.h"
+#include "../include/subbytes.h"
+#include "../include/shiftrows.h"
+#include "../include/ttable.h"
 
 void printHexChar(char ch) {
 	printf("%x", ch & 0xff);
@@ -24,16 +29,18 @@ int main(void) {
 	printf("Key: \t\t%s\n", key);
 	printf("Plaintext: \t%s\n", plaintext);
 
+//	generateTTable();
+
 	startTimer();
 	chipertext = AES128Encrypt(plaintext, key);
 	stopTimer();
+
 	printf("Chipertext: \t%s\n", chipertext);
 
-
-	startTimer();
-	plaintext2 = AES128Decrypt(chipertext, key);
-	stopTimer();
-	printf("Plaintext: \t%s\n", plaintext2);
+//	startTimer();
+//	plaintext2 = AES128Decrypt(chipertext, key);
+//	stopTimer();
+//	printf("Plaintext: \t%s\n", plaintext2);
 
 	return 0;
 }
