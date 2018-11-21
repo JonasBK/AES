@@ -17,6 +17,7 @@
 #include "../include/subbytes.h"
 #include "../include/shiftrows.h"
 #include "../include/ttable.h"
+#include "../include/hellmantables.h"
 
 void printHexChar(char ch) {
 	printf("%x", ch & 0xff);
@@ -29,6 +30,7 @@ int main(void) {
 	printf("Key: \t\t%s\n", key);
 	printf("Plaintext: \t%s\n", plaintext);
 
+//	generateHellman();
 //	generateTTable();
 
 	startTimer();
